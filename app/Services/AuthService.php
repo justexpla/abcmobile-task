@@ -6,8 +6,10 @@ namespace App\Services;
 
 use App\Contracts\AuthServiceContract;
 use App\Dto\RegisterUserDto;
+use App\Mail\Auth\UserRegistered;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 final class AuthService implements AuthServiceContract
 {
@@ -23,6 +25,14 @@ final class AuthService implements AuthServiceContract
         $user->password = Hash::make($dto->password);
 
         $user->save();
+
+        if ($sendEmail) {
+            // @TODO Настроить отдельный контейнер под обработку очередей
+            Mail::to($user->email)->queue(
+                (new UserRegistered($user))
+                    ->onQueue('send-email')
+            );
+        }
 
         return $user;
     }
