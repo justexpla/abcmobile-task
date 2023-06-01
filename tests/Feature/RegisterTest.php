@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Mail\Auth\UserRegistered;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -142,6 +144,17 @@ class RegisterTest extends TestCase
      */
     public function it_sends_email_after_registration()
     {
-        // @TODO
+        Mail::fake();
+
+        $data = [
+            'email' => $email = fake()->email,
+            'password' => 'sB9eJx8H',
+            'password_confirmation' => 'sB9eJx8H',
+        ];
+
+        $this->json('POST', route('api.v1.register'), $data)
+            ->assertStatus(201);
+
+        Mail::assertQueued(UserRegistered::class);
     }
 }
