@@ -32,7 +32,7 @@ class RegisterTest extends TestCase
 
         $this->assertDatabaseMissing('users', ['email' => $email]);
 
-        $this->json('POST', route('api.v1.register'), $data)
+        $this->postJson(route('api.v1.auth.register'), $data)
             ->assertStatus(201);
 
         $this->assertDatabaseHas('users', ['email' => $email]);
@@ -48,7 +48,7 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'sB9eJx8H',
         ];
 
-        $this->json('POST', route('api.v1.register'), $data)
+        $this->postJson(route('api.v1.auth.register'), $data)
             ->assertStatus(422)
             ->assertJsonValidationErrorFor('email');
     }
@@ -62,7 +62,7 @@ class RegisterTest extends TestCase
             'email' => $email = fake()->email,
         ];
 
-        $this->json('POST', route('api.v1.register'), $data)
+        $this->postJson(route('api.v1.auth.register'), $data)
             ->assertStatus(422)
             ->assertJsonValidationErrorFor('password');
     }
@@ -77,7 +77,7 @@ class RegisterTest extends TestCase
             'password' => 'sB9eJx8H',
         ];
 
-        $this->json('POST', route('api.v1.register'), $data)
+        $this->postJson(route('api.v1.auth.register'), $data)
             ->assertStatus(422)
             ->assertJsonValidationErrorFor('password');
     }
@@ -97,7 +97,7 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'sB9eJx8H',
         ];
 
-        $this->json('POST', route('api.v1.register'), $data)
+        $this->postJson(route('api.v1.auth.register'), $data)
             ->assertStatus(422)
             ->assertJsonValidationErrorFor('email');
     }
@@ -113,7 +113,7 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'sB9eJx8H',
         ];
 
-        $this->json('POST', route('api.v1.register'), $data)
+        $this->postJson(route('api.v1.auth.register'), $data)
             ->assertStatus(422)
             ->assertJsonValidationErrorFor('email');
     }
@@ -129,13 +129,14 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'sB9eJx8H',
         ];
 
-        $response = $this->json('POST', route('api.v1.register'), $data);
+        $response = $this->postJson(route('api.v1.auth.register'), $data);
 
         $response->assertStatus(201);
 
         $response->assertJson(fn (AssertableJson $json) =>
-            $json->hasAll(['data.id', 'data.email'])
-                ->whereType('data.id', 'string')
+            $json->hasAll(['data.access_token', 'data.token_type', 'data.expires_in', 'data.user.id', 'data.user.email'])
+                ->whereType('data.access_token', 'string')
+                ->whereType('data.user.id', 'string')
         );
     }
 
@@ -152,7 +153,7 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'sB9eJx8H',
         ];
 
-        $this->json('POST', route('api.v1.register'), $data)
+        $this->postJson(route('api.v1.auth.register'), $data)
             ->assertStatus(201);
 
         Mail::assertQueued(UserRegistered::class);

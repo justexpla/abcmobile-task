@@ -8,7 +8,7 @@ use App\Contracts\AuthServiceContract;
 use App\Dto\RegisterUserDto;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\RegisterRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\AuthResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 final class RegisterController extends BaseApiController
@@ -23,6 +23,6 @@ final class RegisterController extends BaseApiController
 
         $user = $this->authService->registerUser($registerDto);
 
-        return UserResource::make($user);
+        return AuthResponse::make($user);
     }
 }
