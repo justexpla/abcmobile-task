@@ -19,7 +19,7 @@ Route::group(['as' => 'api.v1.'], function () {
                 ->name('me');
         });
 
-        Route::group(['as' => 'user.'], function () {
+        Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
             Route::match(['PATCH', 'PUT'], 'settings', [
                 \App\Http\Controllers\Api\V1\User\SettingsController::class, 'update'
             ])->name('settings.update');

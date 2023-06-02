@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
+use App\Rules\SupportedLang;
 
-final class RegisterRequest extends BaseRequest
+final class UpdateSettingsRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,6 +14,8 @@ final class RegisterRequest extends BaseRequest
     public function rules(): array
     {
         return [
+            'timezone' => ['required', 'timezone:all'],
+            'language' => ['required', 'string', new SupportedLang()]
         ];
     }
 }
