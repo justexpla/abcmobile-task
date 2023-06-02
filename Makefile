@@ -9,3 +9,6 @@ build:
 
 cli:
 	docker-compose exec php /bin/bash
+
+test:
+	docker-compose exec php php artisan test
