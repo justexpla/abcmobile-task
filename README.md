@@ -15,8 +15,9 @@
 4. Сгенерировать ключи приложения и JWT     
 
 ```
-php artisan key:generate
-php artisan jwt:secret
+docker-compose exec php php artisan key:generate
+docker-compose exec php php artisan jwt:secret
+docker-compose exec php php artisan optimize
 ```
 
 5. Запустить тесты ```make test```
@@ -28,5 +29,8 @@ php artisan jwt:secret
 
 Для первичного ключа пользователя был выбран UUID v7 (хоть его спецификация не до конца принята) 
 для работы с несколькими репликами.
+
+Для тестового задания я не стал делать отдельный воркер для обработки очередей, но для этой цели я добавил бы Redis 
+(как и для кеширования), и еще один автоподнимающийся контейнер php с обработчиками
 
 По любым вопросам можно обращаться ко мне в телеграм (указан в email)
